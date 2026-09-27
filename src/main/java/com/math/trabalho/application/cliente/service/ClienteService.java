@@ -1,6 +1,7 @@
 package com.math.trabalho.application.cliente.service;
 
 import com.math.trabalho.application.cliente.dto.request.CreateClienteRequest;
+import com.math.trabalho.application.cliente.dto.request.EditClienteRequest;
 import com.math.trabalho.application.cliente.dto.response.ClienteResponse;
 import com.math.trabalho.application.cliente.filter.ClienteFilter;
 import com.math.trabalho.application.cliente.filter.ClienteSpecification;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -37,9 +39,7 @@ public class ClienteService {
     }
 
     public ClienteResponse findById(Long id){
-        Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Cliente nao encontrado"));
+        Cliente cliente = getClienteById(id);
 
         return toResponse(cliente);
     }
@@ -54,11 +54,28 @@ public class ClienteService {
         return toResponse(cliente);
     }
 
+    @Transactional
+    public void editById(Long id, EditClienteRequest request){
+        Cliente cliente = getClienteById(id);
+        cliente.setName(request.name());
+    }
+
+    public void deleteById(Long id){
+        Cliente cliente = getClienteById(id);
+        clienteRepository.delete(cliente);
+    }
+
     private ClienteResponse toResponse(Cliente cliente){
         return new ClienteResponse(
                 cliente.getId(),
                 cliente.getName(),
                 cliente.getCreatedAt()
         );
+    }
+
+    private Cliente getClienteById(Long id){
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente nao encontrado"));
     }
 }

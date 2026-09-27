@@ -1,6 +1,7 @@
 package com.math.trabalho.application.cliente.controller;
 
 import com.math.trabalho.application.cliente.dto.request.CreateClienteRequest;
+import com.math.trabalho.application.cliente.dto.request.EditClienteRequest;
 import com.math.trabalho.application.cliente.dto.response.ClienteResponse;
 import com.math.trabalho.application.cliente.filter.ClienteFilter;
 import com.math.trabalho.application.cliente.service.ClienteService;
@@ -41,5 +42,18 @@ public class ClienteController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(clienteService.create(request));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> editById(@PathVariable Long id,
+                                     @Valid @RequestBody EditClienteRequest request){
+        clienteService.editById(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        clienteService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
