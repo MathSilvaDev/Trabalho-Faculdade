@@ -1,5 +1,6 @@
 package com.math.trabalho.application.cliente.service;
 
+import com.math.trabalho.application.cliente.dto.request.CreateClienteRequest;
 import com.math.trabalho.application.cliente.dto.response.ClienteResponse;
 import com.math.trabalho.application.cliente.filter.ClienteFilter;
 import com.math.trabalho.application.cliente.filter.ClienteSpecification;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,24 @@ public class ClienteService {
 
         return clienteRepository.findAll(spec, pageable)
                 .map(this::toResponse);
+    }
+
+    public ClienteResponse findById(Long id){
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente nao encontrado"));
+
+        return toResponse(cliente);
+    }
+
+    public ClienteResponse create(CreateClienteRequest request){
+        Cliente cliente = new Cliente(
+                request.name()
+        );
+
+        clienteRepository.save(cliente);
+
+        return toResponse(cliente);
     }
 
     private ClienteResponse toResponse(Cliente cliente){
