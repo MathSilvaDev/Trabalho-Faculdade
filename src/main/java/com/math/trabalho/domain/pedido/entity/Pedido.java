@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "pedidos")
@@ -28,7 +31,17 @@ public class Pedido {
     @Column(nullable = false)
     private Integer quantity;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDate createdAt;
+
     public Pedido(Cliente cliente, Produto produto, Integer quantity){
+        this.cliente = cliente;
+        this.produto = produto;
+        this.quantity = quantity;
+    }
+
+    public void edit(Cliente cliente, Produto produto, Integer quantity){
         this.cliente = cliente;
         this.produto = produto;
         this.quantity = quantity;

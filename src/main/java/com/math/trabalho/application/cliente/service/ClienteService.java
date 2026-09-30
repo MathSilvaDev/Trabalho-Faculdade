@@ -39,9 +39,7 @@ public class ClienteService {
     }
 
     public ClienteResponse findById(Long id){
-        Cliente cliente = getClienteById(id);
-
-        return toResponse(cliente);
+        return toResponse(getClienteById(id));
     }
 
     public ClienteResponse create(CreateClienteRequest request){
@@ -56,13 +54,11 @@ public class ClienteService {
 
     @Transactional
     public void editById(Long id, EditClienteRequest request){
-        Cliente cliente = getClienteById(id);
-        cliente.setName(request.name());
+        getClienteById(id).setName(request.name());
     }
 
     public void deleteById(Long id){
-        Cliente cliente = getClienteById(id);
-        clienteRepository.delete(cliente);
+        clienteRepository.delete(getClienteById(id));
     }
 
     private ClienteResponse toResponse(Cliente cliente){

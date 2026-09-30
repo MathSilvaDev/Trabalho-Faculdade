@@ -30,4 +30,13 @@ public class Produto {
         this.price = price;
         this.inStock = inStock;
     }
+
+    public void edit(String name, BigDecimal price){
+        this.name = name;
+        this.price = price;
+    }
+
+    public void toggleInStock(){
+        inStock = !inStock;
+    }
 }

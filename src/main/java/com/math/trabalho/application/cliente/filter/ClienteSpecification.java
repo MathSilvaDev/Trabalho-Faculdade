@@ -14,15 +14,13 @@ public class ClienteSpecification{
     }
 
     private static Specification<Cliente> containsNameIgnoreCaseSensitive(String name){
-        return (root, query, cb) ->
-                name == null
+        return (root, query, cb) -> name == null
                 ? null
                 : cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
     private static Specification<Cliente> exactCreatedAt(LocalDate createdAt){
-        return (root, query, cb) ->
-                createdAt == null
+        return (root, query, cb) -> createdAt == null
                 ? null
                 : cb.equal(root.get("createdAt"), createdAt);
     }
